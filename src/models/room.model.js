@@ -7,7 +7,10 @@ const roomSchema = new mongoose.Schema(
     price: { type: Number, required: true, min: 0 }, // simple price field (aligns with your controller)
     capacity: { type: Number, required: true, min: 1 },
     description: { type: String, default: '' },
-    image: { type: String },
+      image: { 
+    type: String, 
+    default: 'https://via.placeholder.com/400x300?text=No+Image' 
+  },
     size: String,
     bedType: String,
     features: [String],
