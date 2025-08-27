@@ -12,7 +12,7 @@ const options = {
     },
     servers: [
       {
-        url: process.env.BASE_URL || "http://localhost:3000/api/v1",
+        url: "https://hotel-booking-ar5z.onrender.com/api/v1" || "http://localhost:3000/api/v1",
         description: 'Local server',
       },
     ],
