@@ -7,6 +7,10 @@ const roomSchema = new mongoose.Schema(
     price: { type: Number, required: true, min: 0 }, // simple price field (aligns with your controller)
     capacity: { type: Number, required: true, min: 1 },
     description: { type: String, default: '' },
+    image: { type: String, default: '' },
+    size: String,
+    bedType: String,
+    features: [String],
     amenities: [{ type: String }],
     isAvailable: { type: Boolean, default: true },
   },
