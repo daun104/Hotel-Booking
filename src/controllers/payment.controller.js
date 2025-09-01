@@ -1,4 +1,3 @@
-// src/controllers/payment.controller.js
 const paymentService = require('../services/payment.service');
 
 /**
@@ -9,12 +8,12 @@ async function createCheckoutSession(req, res) {
     const result = await paymentService.createCheckoutSession({
       bookingId: req.body.bookingId,
       user: req.user, // auth middleware attaches { id, role }
-      // optional: can accept successUrl / cancelUrl from client
       successUrl: req.body.successUrl,
       cancelUrl: req.body.cancelUrl,
     });
     return res.json(result);
   } catch (err) {
+    console.error('❌ Error in createCheckoutSession:', err.message);
     const status = err.status || 500;
     return res.status(status).json({ error: err.message });
   }
@@ -29,15 +28,22 @@ async function stripeWebhook(req, res) {
     const rawBody = req.body; // express.raw provides raw body here (Buffer)
     const signature = req.headers['stripe-signature'];
 
-    // small debug log - you can remove later
-    // console.log('🔔 Received Stripe webhook:', req.headers['stripe-signature'] ? 'has signature' : 'no signature');
+    if (!signature) {
+      console.warn('⚠️ Stripe webhook missing signature header');
+      return res.status(400).send('Missing Stripe signature');
+    }
+
+    console.log('🔔 Stripe webhook received. Signature present.');
 
     const result = await paymentService.handleWebhook({ rawBody, signature });
-    return res.json(result);
+
+    // Stripe requires a 200 response quickly, even if we just ack
+    return res.status(200).json({ received: true, result });
   } catch (err) {
+    console.error('❌ Error in stripeWebhook:', err.message);
     const status = err.status || 500;
-    // For Stripe it's fine to send plain text on signature error
-    return res.status(status).send(err.message);
+    // Stripe expects plain text error message
+    return res.status(status).send(`Webhook Error: ${err.message}`);
   }
 }
 
