@@ -59,8 +59,8 @@ async function createCheckoutSession({ bookingId, user, successUrl, cancelUrl })
     'http://localhost:3000'
   );
 
-  const finalSuccess = successUrl ? ensureUrl(successUrl, serverBase) : `${serverBase}/api/v1/payments/success?session_id={CHECKOUT_SESSION_ID}`;
-  const finalCancel = cancelUrl ? ensureUrl(cancelUrl, serverBase) : `${serverBase}/api/v1/payments/cancel`;
+  const finalSuccess = successUrl ? ensureUrl(successUrl, serverBase) : `${serverBase}/success?session_id={CHECKOUT_SESSION_ID}`;
+  const finalCancel = cancelUrl ? ensureUrl(cancelUrl, serverBase) : `${serverBase}/cancel`;
 
   const currency = (config && config.stripe && config.stripe.currency) || process.env.STRIPE_CURRENCY || 'usd';
 
