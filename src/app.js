@@ -28,7 +28,7 @@ app.use(limiter);
 
 // CORS (adjust as needed)
 app.use(cors({
-  origin: true,
+  origin: "*",
   credentials: true,
 }));
 
