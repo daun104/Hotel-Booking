@@ -158,8 +158,19 @@ async function handleWebhook({ rawBody, signature }) {
     );
 
     if (bookingId) {
-      await Booking.findByIdAndUpdate(bookingId, { status: 'confirmed', paidAt: new Date() });
+  const booking = await Booking.findById(bookingId).populate('room');
+  if (booking) {
+    booking.status = 'confirmed';
+    booking.paidAt = new Date();
+    await booking.save();
+
+    // ✅ Mark room as unavailable
+    if (booking.room) {
+      booking.room.isAvailable = false;
+      await booking.room.save();
     }
+  }
+}
   }
 
   if (event.type === 'payment_intent.payment_failed') {
