@@ -28,9 +28,15 @@ app.use(limiter);
 
 // CORS (adjust as needed)
 app.use(cors({
-  origin: "*",
+  origin: (origin, callback) => {
+    // allow requests with no origin (like mobile apps, curl) or any origin
+    callback(null, true);
+  },
   credentials: true,
 }));
+
+// Enable preflight for all routes
+app.options('*', cors());
 
 // Cookies
 app.use(cookieParser(config.cookieSecret));
